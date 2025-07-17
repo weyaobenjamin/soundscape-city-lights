@@ -103,3 +103,8 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+.futuristic-glow {
+  box-shadow: 0 0 32px 4px #34d39955, 0 0 8px 2px #10b98199;
+  border: 1px solid #10b98133;
+}
