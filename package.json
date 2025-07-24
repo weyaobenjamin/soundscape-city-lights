@@ -81,7 +81,7 @@
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
   },
-  "description": "**URL**: https://lovable.dev/projects/9681014c-8ac7-4e0c-94b9-637010d3eea6",
+  "description": "",
   "main": "eslint.config.js",
   "repository": {
     "type": "git",

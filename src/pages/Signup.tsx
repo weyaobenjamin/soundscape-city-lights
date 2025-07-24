@@ -1,113 +1,11 @@
-import { useForm } from "react-hook-form";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-import { db } from "@/lib/firebase";
-import { setDoc, doc } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
-  const form = useForm({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      role: "user",
-    },
-  });
-  const navigate = useNavigate();
-  const [error, setError] = useState("");
-
-  const onSubmit = async (data: any) => {
-    setError("");
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-      if (data.name) {
-        await updateProfile(userCredential.user, { displayName: data.name });
-      }
-      // Store role in Firestore
-      await setDoc(doc(db, "users", userCredential.user.uid), {
-        name: data.name,
-        email: data.email,
-        role: data.role,
-      });
-      navigate("/");
-    } catch (err: any) {
-      setError(err.message || "Signup failed");
-    }
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-        {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input type="text" placeholder="Enter your name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="Enter your email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Create a password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <FormControl>
-                    <select {...field} className="w-full border rounded px-3 py-2">
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full">Sign Up</Button>
-          </form>
-        </Form>
-        <div className="mt-4 text-center text-sm text-gray-600">
-          Already have an account? <Link to="/login" className="text-blue-500 hover:underline">Login</Link>
-        </div>
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md text-center">
+        <h2 className="text-2xl font-bold mb-6">Sign Up Disabled</h2>
+        <p className="mb-4 text-gray-700">Signup is disabled. Please use the admin credentials to <Link to="/login" className="text-blue-500 hover:underline">login</Link>.</p>
       </div>
     </div>
   );

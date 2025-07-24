@@ -23,13 +23,30 @@ const Login = () => {
   const query = useQuery();
   const role = query.get("role") || "user";
 
-  const onSubmit = async (data: any) => {
+  const ADMIN_EMAIL = "jones@gmail.com";
+  const ADMIN_PASSWORD = "benjii";
+
+  const onSubmit = async (data: { email: string; password: string }) => {
     setError("");
+    if (role === "admin") {
+      // Only allow hardcoded admin credentials
+      if (data.email === ADMIN_EMAIL && data.password === ADMIN_PASSWORD) {
+        navigate("/dashboard");
+      } else {
+        setError("Invalid admin credentials.");
+      }
+      return;
+    }
+    // For all other roles, use Firebase
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      navigate("/");
-    } catch (err: any) {
-      setError(err.message || "Login failed");
+      navigate("/dashboard");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Login failed");
+      } else {
+        setError("Login failed");
+      }
     }
   };
 
@@ -71,7 +88,7 @@ const Login = () => {
           </form>
         </Form>
         <div className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account? <Link to="/signup" className="text-blue-500 hover:underline">Sign up</Link>
+          Signup is disabled. Please use the admin credentials to login.
         </div>
       </div>
     </div>

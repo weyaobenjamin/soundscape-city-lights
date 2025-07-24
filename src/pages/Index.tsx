@@ -4,11 +4,20 @@ import { MapView } from "@/components/MapView";
 import { Dashboard } from "@/components/Dashboard";
 import { Header } from "@/components/Header";
 import { SidePanel } from "@/components/SidePanel";
+import { toast } from "@/components/ui/sonner";
 
 const Index = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [timeRange, setTimeRange] = useState("24h");
   const [noiseData, setNoiseData] = useState([]);
+  const [lastMax, setLastMax] = useState(0);
+
+  // Spike detection and notification
+  const handleNoiseSpike = () => {
+    toast("Noise spike detected!", {
+      description: "A sudden spike in noise levels was detected in the city.",
+    });
+  };
 
   // Simulate real-time data updates
   useEffect(() => {
@@ -23,10 +32,16 @@ const Index = () => {
         { id: 6, name: "Airport Vicinity", lat: 40.6413, lng: -73.7781, level: Math.random() * 30 + 70, type: "aircraft" },
       ];
       setNoiseData(mockData);
+      // Spike detection: if any level > 100 and was not previously
+      const maxLevel = Math.max(...mockData.map(d => d.level));
+      if (maxLevel > 100 && lastMax <= 100) {
+        handleNoiseSpike();
+      }
+      setLastMax(maxLevel);
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [lastMax]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">

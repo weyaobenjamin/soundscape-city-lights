@@ -1,12 +1,34 @@
 
-import { Activity, Settings, Bell } from "lucide-react";
+import { Activity, Settings, Bell, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { toast } from "@/components/ui/sonner";
 
-export const Header = () => {
+export const Header = ({ onShowSettings, onShowNotification }: { onShowSettings?: () => void; onShowNotification?: () => void }) => {
+  const navigate = useNavigate();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    navigate("/login");
+  };
+
+  const handleNotification = () => {
+    if (onShowNotification) {
+      onShowNotification();
+    } else {
+      toast("Noise spike detected!", {
+        description: "A sudden spike in noise levels was detected in the city.",
+      });
+    }
+  };
+
   return (
     <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -23,17 +45,14 @@ export const Header = () => {
           <div className="text-sm text-gray-300">
             Last Updated: {new Date().toLocaleTimeString()}
           </div>
-          <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
+          <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white" onClick={handleNotification} aria-label="Notifications">
             <Bell className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-            <Settings className="h-4 w-4" />
-          </Button>
-          <Dialog>
+          <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
             <DialogTrigger asChild>
-              <button className="ml-2 focus:outline-none">
-                <Avatar />
-              </button>
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white" aria-label="Settings" onClick={() => setSettingsOpen(true)}>
+                <Settings className="h-4 w-4" />
+              </Button>
             </DialogTrigger>
             <DialogContent className="bg-gradient-to-br from-gray-900 via-gray-800 to-emerald-900 border-none shadow-2xl p-8 rounded-2xl max-w-md text-white futuristic-glow">
               <DialogHeader>
@@ -58,6 +77,10 @@ export const Header = () => {
               </div>
             </DialogContent>
           </Dialog>
+          <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white" onClick={handleLogout} aria-label="Logout">
+            <LogOut className="h-4 w-4" />
+            <span className="ml-2 hidden sm:inline">Logout</span>
+          </Button>
         </div>
       </div>
     </header>
