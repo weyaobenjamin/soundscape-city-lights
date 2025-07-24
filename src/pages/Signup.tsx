@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
+import { setDoc, doc } from "firebase/firestore";
 
 const Signup = () => {
   const form = useForm({
@@ -13,6 +15,7 @@ const Signup = () => {
       name: "",
       email: "",
       password: "",
+      role: "user",
     },
   });
   const navigate = useNavigate();
@@ -25,6 +28,12 @@ const Signup = () => {
       if (data.name) {
         await updateProfile(userCredential.user, { displayName: data.name });
       }
+      // Store role in Firestore
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        name: data.name,
+        email: data.email,
+        role: data.role,
+      });
       navigate("/");
     } catch (err: any) {
       setError(err.message || "Signup failed");
@@ -72,6 +81,22 @@ const Signup = () => {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="Create a password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <FormControl>
+                    <select {...field} className="w-full border rounded px-3 py-2">
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

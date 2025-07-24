@@ -11,6 +11,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import Landing from "./pages/Landing";
 
 const queryClient = new QueryClient();
 
@@ -38,9 +39,12 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<PrivateRoute><Index /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><Index /></PrivateRoute>} />
+          <Route path="/user" element={<PrivateRoute><div>User Page (placeholder)</div></PrivateRoute>} />
+          <Route path="/admin" element={<PrivateRoute><div>Admin Page (placeholder)</div></PrivateRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
