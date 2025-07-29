@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import Landing from "./pages/Landing";
+import AdminDashboard from "./pages/AdminDashboard";
+import UserDashboard from "./pages/UserDashboard";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +44,8 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/admin-dashboard" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
+          <Route path="/user-dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Index /></PrivateRoute>} />
           <Route path="/user" element={<PrivateRoute><div>User Page (placeholder)</div></PrivateRoute>} />
           <Route path="/admin" element={<PrivateRoute><div>Admin Page (placeholder)</div></PrivateRoute>} />

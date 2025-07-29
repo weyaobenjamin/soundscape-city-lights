@@ -1,11 +1,15 @@
 
 import { useState, useEffect } from "react";
 import { MapView } from "@/components/MapView";
-import { Dashboard, CurrentNoiseLevelsChart, HourlyTrendChart, NoiseSourcesChart } from "@/components/Dashboard";
+import { Dashboard, HourlyTrendChart, NoiseSourcesChart } from "@/components/Dashboard";
 import { Header } from "@/components/Header";
 import { SidePanel } from "@/components/SidePanel";
 import { toast } from "@/components/ui/sonner";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import StatsOverview from "@/components/StatsOverview";
+import NoiseHeatmap from "@/components/NoiseHeatmap";
+import TrendChart from "@/components/TrendChart";
+import CurrentLevelsChart from "@/components/CurrentLevelsChart";
 
 const ADMIN_EMAIL = "jones@gmail.com";
 
@@ -101,7 +105,7 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header 
         onShowSettings={onShowSettings} 
         onShowNotification={onShowNotification}
@@ -114,27 +118,14 @@ const AdminDashboard = () => {
       <div className="flex flex-col lg:flex-row flex-1 h-full">
         <SidePanel noiseData={noiseData} selectedLocation={selectedLocation} onLocationSelect={setSelectedLocation} timeRange={timeRange} onTimeRangeChange={setTimeRange} />
         <div className="flex-1 flex flex-col min-h-0 p-4 space-y-4">
-          {/* Noise Level Heatmap */}
-          <div className="h-64 lg:h-80">
-            <MapView noiseData={noiseData} selectedLocation={selectedLocation} onLocationSelect={setSelectedLocation} />
-          </div>
-          
-          {/* Charts stacked vertically */}
-          <div className="space-y-4">
-            {/* Current Noise Levels */}
-            <div className="h-64">
-              <CurrentNoiseLevelsChart noiseData={noiseData} />
-            </div>
-            
-            {/* 24-Hour Trend */}
-            <div className="h-64">
-              <HourlyTrendChart timeRange={timeRange} />
-            </div>
-            
-            {/* Noise Sources */}
-            <div className="h-64">
-              <NoiseSourcesChart noiseData={noiseData} />
-            </div>
+          {/* Stats Overview */}
+          <StatsOverview noiseData={noiseData} />
+          {/* Stack charts vertically */}
+          <div className="flex flex-col gap-8">
+            <NoiseHeatmap noiseData={noiseData} />
+            <CurrentLevelsChart noiseData={noiseData} />
+            <TrendChart noiseData={noiseData} />
+            <NoiseSourcesChart noiseData={noiseData} />
           </div>
         </div>
       </div>
@@ -143,4 +134,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-

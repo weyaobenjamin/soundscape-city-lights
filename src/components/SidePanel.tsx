@@ -53,7 +53,7 @@ export const SidePanel = ({
   const alertCount = noiseData.filter(point => point.level > 70).length;
 
   return (
-    <div className="w-80 bg-gray-800 border-r border-gray-700 flex flex-col">
+    <div className="w-full md:w-80 bg-gray-800 border-r border-gray-700 flex flex-col">
       {/* Controls */}
       <div className="p-4 border-b border-gray-700">
         <div className="space-y-4">
@@ -104,10 +104,10 @@ export const SidePanel = ({
       </div>
 
       {/* Location List */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-4">
+      <div className="flex-1 overflow-hidden">
+        <div className="p-4 h-full flex flex-col">
           <h3 className="text-sm font-medium text-gray-300 mb-3">Monitoring Locations</h3>
-          <div className="space-y-2">
+          <div className="flex-1 overflow-y-auto space-y-2">
             {sortedData.map((point) => (
               <Card
                 key={point.id}
