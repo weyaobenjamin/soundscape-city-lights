@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const THEME_KEY = "urban_noise_theme";
 
@@ -20,7 +21,7 @@ export default function UserHeader({ onSettingsClick }: { onSettingsClick?: () =
   const [notifCount, setNotifCount] = useState(mockNotifications.length);
   const { theme, setTheme } = useTheme();
   const [location] = useState("Nairobi, Kenya");
-  const [profile] = useState({ name: "Samuel Kiprotich Mwangi" });
+  const { userData } = useAuth();
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);

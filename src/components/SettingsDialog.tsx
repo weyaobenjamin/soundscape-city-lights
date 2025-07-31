@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const defaultSettings = {
   darkTheme: true,
@@ -28,11 +29,34 @@ const SETTINGS_KEY = "urban_noise_settings";
 export default function SettingsDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
   const [settings, setSettings] = useState(defaultSettings);
   const { theme, setTheme } = useTheme();
+  const { userData } = useAuth();
 
   useEffect(() => {
     const saved = localStorage.getItem(SETTINGS_KEY);
-    if (saved) setSettings(JSON.parse(saved));
-  }, [open]);
+    if (saved) {
+      const savedSettings = JSON.parse(saved);
+      // Update profile with current user data if available
+      if (userData) {
+        savedSettings.profile = {
+          name: userData.name,
+          email: userData.email,
+          picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}`
+        };
+      }
+      setSettings(savedSettings);
+    } else if (userData) {
+      // If no saved settings, initialize with user data
+      const userSettings = {
+        ...defaultSettings,
+        profile: {
+          name: userData.name,
+          email: userData.email,
+          picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}`
+        }
+      };
+      setSettings(userSettings);
+    }
+  }, [open, userData]);
 
   const handleChange = (key: string, value: any) => {
     setSettings((prev: any) => ({ ...prev, [key]: value }));

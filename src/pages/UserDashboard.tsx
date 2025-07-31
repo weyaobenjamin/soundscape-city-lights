@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import UserHeader from "@/components/UserHeader";
 import SettingsDialog from "@/components/SettingsDialog";
+import { useAuth } from "@/contexts/AuthContext";
 
   // List of major Kenyan locations for noise monitoring
   const KENYA_LOCATIONS = [
@@ -50,6 +51,7 @@ const UserDashboard = () => {
   const [noiseData, setNoiseData] = useState([]);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
+  const { userData } = useAuth();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -73,7 +75,7 @@ const UserDashboard = () => {
       {/* Welcome Banner */}
       <div className="w-full max-w-6xl mt-4 mb-6">
         <div className="bg-emerald-500 text-white rounded-2xl px-8 py-6 text-left shadow-lg">
-          <h2 className="text-2xl font-bold mb-2">Welcome back, Ben Jones !</h2>
+          <h2 className="text-2xl font-bold mb-2">Welcome back, {userData?.name || 'User'}!</h2>
           <p className="text-base">Track noise levels in your area and report any concerns to local authorities.</p>
         </div>
       </div>
